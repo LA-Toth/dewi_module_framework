@@ -32,7 +32,7 @@ setup(
     name="dewi_module_framework",
     description="DEWI Module Framework: modules with own config and messages",
     license="LGPLv3",
-    version="2.0",
+    version="2.0.1",
     author="Laszlo Attila Toth",
     author_email="python-dewi@laszloattilatoth.me",
     maintainer="Laszlo Attila Toth",
