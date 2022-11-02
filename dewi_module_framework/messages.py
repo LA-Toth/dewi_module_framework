@@ -1,8 +1,7 @@
-# Copyright 2016-2019 Laszlo Attila Toth
+# Copyright 2016-2022 Laszlo Attila Toth
 # Distributed under the terms of the GNU Lesser General Public License v3
 
 import enum
-import typing
 
 CORE_CATEGORY = 'Core'
 
@@ -25,8 +24,8 @@ class Message:
     def __init__(self,
                  level: Level, category: str, sub_category: str, message: str,
                  *,
-                 hint: typing.Optional[typing.List[str]] = None,
-                 details: typing.Optional[typing.List[str]] = None):
+                 hint: list[str] | None = None,
+                 details: list[str] | None = None):
         self.level = level
         self.category = category
         self.subcategory = sub_category
@@ -48,14 +47,14 @@ class Message:
 
 class Messages:
     def __init__(self):
-        self._messages: typing.Dict[str, typing.Dict[str, typing.List[Message]]] = dict()
-        self._alerts: typing.List[str] = list()
-        self._warnings: typing.List[str] = list()
+        self._messages: dict[str, dict[str, list[Message]]] = dict()
+        self._alerts: list[str] = list()
+        self._warnings: list[str] = list()
 
     def add(self, level: Level, category: str, sub_category: str, message: str,
             *,
-            hint: typing.Optional[typing.Union[typing.List[str], str]] = None,
-            details: typing.Optional[typing.Union[typing.List[str], str]] = None):
+            hint: list[str] | str | None = None,
+            details: list[str] | str | None = None):
         if isinstance(hint, str):
             hint = [hint]
         if isinstance(details, str):
@@ -65,8 +64,8 @@ class Messages:
 
     def _add(self,
              level: Level, category: str, sub_category: str, message: str,
-             hint: typing.Optional[typing.List[str]] = None,
-             details: typing.Optional[typing.List[str]] = None):
+             hint: list[str] | None = None,
+             details: list[str] | None = None):
 
         if category not in self._messages:
             self._messages[category] = dict()
@@ -83,11 +82,11 @@ class Messages:
             self._warnings.append(message)
 
     @property
-    def messages(self) -> typing.Dict[str, typing.Dict[str, typing.List[Message]]]:
+    def messages(self) -> dict[str, dict[str, list[Message]]]:
         return self._messages
 
     @property
-    def as_dict(self) -> typing.Dict[str, typing.Dict[str, typing.List[dict]]]:
+    def as_dict(self) -> dict[str, dict[str, list[dict]]]:
         result = dict()
         for c in self._messages:
             result[c] = dict()
@@ -99,11 +98,11 @@ class Messages:
         return result
 
     @property
-    def alerts(self) -> typing.List[str]:
+    def alerts(self) -> list[str]:
         return self._alerts
 
     @property
-    def warnings(self) -> typing.List[str]:
+    def warnings(self) -> list[str]:
         return self._warnings
 
     def print_without_category(self):

@@ -1,8 +1,7 @@
-# Copyright 2018-2019 Laszlo Attila Toth
+# Copyright 2018-2022 Laszlo Attila Toth
 # Distributed under the terms of the GNU Lesser General Public License v3
 
-import collections
-import typing
+import collections.abc
 
 from dewi_module_framework.module import Module
 
@@ -26,24 +25,27 @@ class CircularDependency(ValueError):
 
 class ModuleRunner:
     """Runs a set of modules in their dependency order"""
+    _modules: set[Module]
+    _module_name_to_module_map: dict[str, Module]
+    _ordered_modules: list[str]
 
     NO_REQUIREMENT = None
 
     def __init__(self):
-        self._modules: typing.MutableSet[Module] = set()
+        self._modules= set()
         self._module_name_to_module_map = dict()
-        self._ordered_modules: typing.List[Module] = list()
+        self._ordered_modules = list()
 
     def add(self, module: Module):
         self._modules.add(module)
 
-    def run(self, filter_tag: typing.Optional[str] = None):
+    def run(self, filter_tag: str | None = None):
         self._order_modules(filter_tag)
 
         for m in self._ordered_modules:
             self._module_name_to_module_map[m].run()
 
-    def _order_modules(self, filter_tag: typing.Optional[str] = None):
+    def _order_modules(self, filter_tag: str | None = None):
         provided, requirements = self._collect_requirements_and_provided_values()
 
         dependency_graph = self._build_dependency_graph(provided, requirements, filter_tag)
@@ -71,7 +73,7 @@ class ModuleRunner:
 
         return provided, requirements
 
-    def _build_dependency_graph(self, provided: dict, requirements: dict, filter_tag: typing.Optional[str] = None):
+    def _build_dependency_graph(self, provided: dict, requirements: dict, filter_tag: str | None = None):
         # All of the modules should be loaded if they are valid modules filtered by filter_tag
 
         if filter_tag not in requirements:
@@ -137,7 +139,7 @@ class ModuleRunner:
             self,
             dependency_graph: dict,
             visited_nodes: list,
-            dep_names: collections.Iterable):
+            dep_names: collections.abc.Iterable[str]):
 
         for name in dep_names:
             if name is None or name in self._ordered_modules:

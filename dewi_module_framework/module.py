@@ -1,7 +1,5 @@
-# Copyright 2016-2019 Laszlo Attila Toth
+# Copyright 2016-2022 Laszlo Attila Toth
 # Distributed under the terms of the GNU Lesser General Public License v3
-
-import typing
 
 from dewi_core.config.config import Config
 from dewi_module_framework.messages import Level, Messages
@@ -13,7 +11,7 @@ class GenericModule:
                  messages: Messages,
                  *,
                  add_messages_to_config: bool = False,
-                 messages_config_key: typing.Optional[str] = None):
+                 messages_config_key: str | None = None):
         self._config = config
         self._messages = messages
         self._messages_config_key = messages_config_key or 'messages'
@@ -31,8 +29,8 @@ class GenericModule:
     def add_message(self,
                     level: Level, category: str, sub_category: str, message: str,
                     *,
-                    hint: typing.Optional[typing.Union[typing.List[str], str]] = None,
-                    details: typing.Optional[typing.Union[typing.List[str], str]] = None):
+                    hint: list[str] | str | None = None,
+                    details: list[str] | str | None = None):
 
         self._messages.add(level, category, sub_category, message, hint=hint, details=details)
 
@@ -61,7 +59,7 @@ class GenericModule:
 
 
 class Module(GenericModule):
-    def require(self) -> typing.List[str]:
+    def require(self) -> list[str]:
         """A list of tags that should be provided by another module."""
         return []
 
@@ -73,7 +71,7 @@ class Module(GenericModule):
         """
         raise NotImplementedError()
 
-    def get_filter_tags(self) -> typing.List[str]:
+    def get_filter_tags(self) -> list[str]:
         """
         Prefilter the module for instance by OS or by product name depending on the client of module framework.
 
