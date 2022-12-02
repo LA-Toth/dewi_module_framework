@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 # DEWI: a developer tool and framework -- Module Framework
-# Copyright (C) 2012-2019  Laszlo Attila Toth
+# Copyright (C) 2012-2022  Laszlo Attila Toth
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,11 +22,7 @@ import sys
 if sys.hexversion < 0x030a0000:
     raise RuntimeError("Required python version: 3.10 or newer (current: %s)" % sys.version)
 
-try:
-    from setuptools import setup, find_packages
-
-except ImportError:
-    from distutils.core import setup
+from setuptools import setup, find_packages
 
 setup(
     name="dewi_module_framework",
